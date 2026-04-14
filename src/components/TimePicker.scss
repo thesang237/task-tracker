@@ -1,0 +1,105 @@
+@import '../styles/variables';
+
+.time-picker {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-3;
+  margin-bottom: $sp-4;
+
+  &__label {
+    font-size: $text-sm;
+    color: $text-secondary;
+    font-weight: $fw-medium;
+  }
+
+  &__modes {
+    display: flex;
+    gap: $sp-2;
+    background: $bg-input;
+    border: 1px solid $border;
+    border-radius: $r-md;
+    padding: 4px;
+  }
+
+  &__mode {
+    flex: 1;
+    padding: $sp-2 $sp-3;
+    border: none;
+    border-radius: $r-sm;
+    font-family: $font-sans;
+    font-size: $text-sm;
+    font-weight: $fw-medium;
+    color: $text-muted;
+    background: transparent;
+    cursor: pointer;
+    transition: all $t-fast;
+
+    &--active {
+      background: $bg-elevated;
+      color: $text-primary;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+
+    &:hover:not(&--active) {
+      color: $text-secondary;
+    }
+  }
+
+  &__inputs {
+    display: flex;
+    align-items: flex-end;
+    gap: $sp-1;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $sp-1;
+    flex: 1;
+
+    label {
+      font-size: $text-xs;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  &__input {
+    width: 100%;
+    padding: $sp-2 $sp-1;
+    background: $bg-input;
+    border: 1px solid $border;
+    border-radius: $r-md;
+    text-align: center;
+    font-family: $font-mono;
+    font-size: $text-md;
+    font-weight: $fw-semi;
+    color: $text-primary;
+    transition: border-color $t-fast, box-shadow $t-fast;
+
+    &:focus {
+      outline: none;
+      border-color: $border-active;
+      box-shadow: 0 0 0 3px $accent-dim;
+    }
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button { -webkit-appearance: none; }
+    -moz-appearance: textfield;
+  }
+
+  &__separator {
+    font-family: $font-mono;
+    font-size: $text-lg;
+    font-weight: $fw-bold;
+    color: $text-muted;
+    padding-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  &__display {
+    display: none; // redundant with inputs visible
+  }
+}

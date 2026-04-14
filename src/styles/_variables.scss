@@ -1,0 +1,128 @@
+// ── Background & Surface ────────────────────────────────────────────────────
+$bg-base:        #0d0f14;
+$bg-surface:     #13161e;
+$bg-elevated:    #1a1e2a;
+$bg-overlay:     #1f2435;
+$bg-input:       #252a38;
+
+// ── Accent & Brand ──────────────────────────────────────────────────────────
+$accent:         #7c6af7;          // violet
+$accent-glow:    rgba(124, 106, 247, 0.35);
+$accent-dim:     rgba(124, 106, 247, 0.12);
+$accent-hover:   #9585f9;
+
+$green:          #34d399;
+$green-glow:     rgba(52, 211, 153, 0.3);
+$green-dim:      rgba(52, 211, 153, 0.12);
+
+$amber:          #fbbf24;
+$amber-glow:     rgba(251, 191, 36, 0.3);
+$amber-dim:      rgba(251, 191, 36, 0.12);
+
+$rose:           #f87171;
+$rose-glow:      rgba(248, 113, 113, 0.3);
+$rose-dim:       rgba(248, 113, 113, 0.12);
+
+// ── Text ────────────────────────────────────────────────────────────────────
+$text-primary:   #e8eaf2;
+$text-secondary: #8b90a7;
+$text-muted:     #555d78;
+$text-on-accent: #ffffff;
+
+// ── Border ──────────────────────────────────────────────────────────────────
+$border:         rgba(255, 255, 255, 0.07);
+$border-active:  rgba(124, 106, 247, 0.5);
+
+// ── Typography ──────────────────────────────────────────────────────────────
+$font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+
+$text-xs:   0.6875rem;   // 11px
+$text-sm:   0.8125rem;   // 13px
+$text-base: 0.9375rem;   // 15px
+$text-md:   1.0625rem;   // 17px
+$text-lg:   1.25rem;     // 20px
+$text-xl:   1.5rem;      // 24px
+$text-2xl:  2rem;        // 32px
+$text-3xl:  2.75rem;     // 44px
+$text-hero: 4.5rem;      // 72px
+
+$fw-normal:  400;
+$fw-medium:  500;
+$fw-semi:    600;
+$fw-bold:    700;
+
+// ── Spacing ─────────────────────────────────────────────────────────────────
+$sp-1:  0.25rem;
+$sp-2:  0.5rem;
+$sp-3:  0.75rem;
+$sp-4:  1rem;
+$sp-5:  1.25rem;
+$sp-6:  1.5rem;
+$sp-8:  2rem;
+$sp-10: 2.5rem;
+$sp-12: 3rem;
+
+// ── Radius ──────────────────────────────────────────────────────────────────
+$r-sm:   6px;
+$r-md:   10px;
+$r-lg:   16px;
+$r-xl:   24px;
+$r-full: 9999px;
+
+// ── Shadows & Glows ─────────────────────────────────────────────────────────
+$shadow-card:   0 4px 24px rgba(0, 0, 0, 0.4);
+$shadow-raised: 0 8px 40px rgba(0, 0, 0, 0.5);
+$shadow-glow-accent: 0 0 32px rgba(124, 106, 247, 0.25);
+$shadow-glow-green:  0 0 32px rgba(52, 211, 153, 0.2);
+$shadow-glow-amber:  0 0 32px rgba(251, 191, 36, 0.2);
+$shadow-glow-rose:   0 0 32px rgba(248, 113, 113, 0.2);
+
+// ── Transitions ─────────────────────────────────────────────────────────────
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+$t-fast:   0.15s $ease-out;
+$t-base:   0.25s $ease-out;
+$t-slow:   0.4s  $ease-out;
+
+// ── Breakpoints ─────────────────────────────────────────────────────────────
+$bp-sm:  640px;
+$bp-md:  768px;
+$bp-lg:  1024px;
+$bp-xl:  1280px;
+
+// ── Legacy aliases (keep existing components from breaking) ─────────────────
+$primary-color:    $accent;
+$secondary-color:  $green;
+$warning-color:    $amber;
+$danger-color:     $rose;
+$background-light: $bg-elevated;
+$text-dark:        $text-primary;
+$text-light:       $text-secondary;
+$border-color:     $border;
+$shadow-sm:        $shadow-card;
+$shadow-md:        $shadow-raised;
+$shadow-lg:        $shadow-raised;
+$transition-fast:  $t-fast;
+$transition-base:  $t-base;
+$border-radius:    $r-sm;
+$border-radius-lg: $r-lg;
+$spacing-xs: $sp-1;
+$spacing-sm: $sp-2;
+$spacing-md: $sp-4;
+$spacing-lg: $sp-6;
+$spacing-xl: $sp-8;
+$font-size-xs:   $text-xs;
+$font-size-sm:   $text-sm;
+$font-size-base: $text-base;
+$font-size-lg:   $text-md;
+$font-size-xl:   $text-lg;
+$font-size-2xl:  $text-xl;
+$font-size-4xl:  $text-hero;
+$font-family:    $font-sans;
+$font-weight-normal: $fw-normal;
+$font-weight-medium: $fw-medium;
+$font-weight-bold:   $fw-bold;
+$breakpoint-sm: $bp-sm;
+$breakpoint-md: $bp-md;
+$breakpoint-lg: $bp-lg;
+$breakpoint-xl: $bp-xl;

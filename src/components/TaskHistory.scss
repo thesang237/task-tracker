@@ -1,0 +1,256 @@
+@import '../styles/variables';
+
+.task-history {
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: $r-xl;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+
+  // ── Header ────────────────────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: $sp-4;
+    padding: $sp-5 $sp-6;
+    border-bottom: 1px solid $border;
+
+    @media (min-width: $bp-sm) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &__title {
+    font-size: $text-md;
+    font-weight: $fw-semi;
+    color: $text-primary;
+    display: flex;
+    align-items: center;
+    gap: $sp-2;
+  }
+
+  &__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 $sp-2;
+    background: $bg-elevated;
+    border: 1px solid $border;
+    border-radius: $r-full;
+    font-size: $text-xs;
+    font-weight: $fw-semi;
+    color: $text-secondary;
+  }
+
+  &__sort-bar {
+    display: flex;
+    gap: $sp-1;
+    flex-wrap: wrap;
+  }
+
+  &__sort-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: $sp-1 $sp-3;
+    background: transparent;
+    border: 1px solid $border;
+    border-radius: $r-full;
+    font-family: $font-sans;
+    font-size: $text-xs;
+    font-weight: $fw-medium;
+    color: $text-muted;
+    cursor: pointer;
+    transition: all $t-fast;
+
+    &:hover { color: $text-secondary; border-color: rgba(255,255,255,0.12); }
+
+    &--active {
+      background: $bg-elevated;
+      color: $text-primary;
+      border-color: rgba(255,255,255,0.12);
+    }
+  }
+
+  &__sort-arrow { color: $accent; }
+
+  // ── Empty state ──────────────────────────────────────────────────────────
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $sp-12 $sp-6;
+    text-align: center;
+  }
+
+  &__empty-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: $r-xl;
+    background: $bg-elevated;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: $sp-4;
+
+    svg {
+      width: 22px;
+      height: 22px;
+      color: $text-muted;
+    }
+  }
+
+  &__empty-title {
+    font-size: $text-md;
+    font-weight: $fw-semi;
+    color: $text-secondary;
+    margin-bottom: $sp-1;
+  }
+
+  &__empty-sub {
+    font-size: $text-sm;
+    color: $text-muted;
+  }
+
+  // ── List ─────────────────────────────────────────────────────────────────
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  // ── Item card ─────────────────────────────────────────────────────────────
+  &__item {
+    display: flex;
+    align-items: center;
+    padding: $sp-4 $sp-5;
+    border-bottom: 1px solid $border;
+    transition: background $t-fast;
+    position: relative;
+    overflow: hidden;
+
+    &:last-child { border-bottom: none; }
+
+    &:hover {
+      background: rgba(255,255,255,0.02);
+
+      .task-history__item-actions {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
+
+  &__item-accent {
+    width: 3px;
+    align-self: stretch;
+    border-radius: $r-full;
+    margin-right: $sp-4;
+    opacity: 0.65;
+    flex-shrink: 0;
+  }
+
+  &__item-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $sp-2;
+  }
+
+  &__item-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: $sp-3;
+    min-width: 0;
+  }
+
+  &__item-name {
+    font-size: $text-base;
+    font-weight: $fw-medium;
+    color: $text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__item-time {
+    font-size: $text-xs;
+    color: $text-muted;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  &__item-meta {
+    display: flex;
+    align-items: center;
+    gap: $sp-2;
+    flex-wrap: wrap;
+  }
+
+  &__item-category {
+    display: inline-block;
+    padding: 1px $sp-2;
+    border-radius: $r-full;
+    font-size: $text-xs;
+    font-weight: $fw-medium;
+  }
+
+  &__item-duration {
+    font-size: $text-xs;
+    color: $text-muted;
+    font-family: $font-mono;
+  }
+
+  &__item-of { opacity: 0.5; }
+
+  // ── Item actions ─────────────────────────────────────────────────────────
+  &__item-actions {
+    display: flex;
+    align-items: center;
+    gap: $sp-1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity $t-fast;
+    flex-shrink: 0;
+    margin-left: $sp-3;
+  }
+
+  &__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: $r-md;
+    border: none;
+    background: transparent;
+    color: $text-muted;
+    cursor: pointer;
+    transition: all $t-fast;
+
+    svg { width: 14px; height: 14px; }
+
+    &:hover { background: $bg-overlay; color: $text-secondary; }
+
+    &--delete:hover {
+      color: $rose;
+      background: $rose-dim;
+    }
+
+    &--confirm:hover {
+      color: $green;
+      background: $green-dim;
+    }
+
+    &--cancel:hover {
+      color: $text-secondary;
+      background: $bg-overlay;
+    }
+  }
+}

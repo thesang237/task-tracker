@@ -1,0 +1,74 @@
+@import '../styles/variables';
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $sp-2;
+  padding: $sp-2 $sp-5;
+  border: none;
+  border-radius: $r-full;
+  font-family: $font-sans;
+  font-size: $text-sm;
+  font-weight: $fw-semi;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background $t-fast, box-shadow $t-fast, transform $t-fast, opacity $t-fast;
+  white-space: nowrap;
+  position: relative;
+  outline: none;
+
+  &:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &:not(:disabled):active {
+    transform: scale(0.97);
+  }
+}
+
+.btn-primary {
+  background: $accent;
+  color: $text-on-accent;
+
+  &:not(:disabled):hover {
+    background: $accent-hover;
+    box-shadow: 0 0 20px $accent-glow;
+  }
+}
+
+.btn-secondary {
+  background: $bg-elevated;
+  color: $text-secondary;
+  border: 1px solid $border;
+
+  &:not(:disabled):hover {
+    background: $bg-overlay;
+    color: $text-primary;
+    border-color: rgba(255,255,255,0.12);
+  }
+}
+
+.btn-danger {
+  background: rgba(248, 113, 113, 0.15);
+  color: $rose;
+  border: 1px solid rgba(248, 113, 113, 0.25);
+
+  &:not(:disabled):hover {
+    background: rgba(248, 113, 113, 0.25);
+    box-shadow: 0 0 16px $rose-glow;
+  }
+}
+
+.btn-warning {
+  background: rgba(251, 191, 36, 0.12);
+  color: $amber;
+  border: 1px solid rgba(251, 191, 36, 0.22);
+
+  &:not(:disabled):hover {
+    background: rgba(251, 191, 36, 0.22);
+    box-shadow: 0 0 16px $amber-glow;
+  }
+}

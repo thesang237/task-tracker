@@ -1,0 +1,84 @@
+@import '../styles/variables';
+
+.task-form {
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: $r-xl;
+  box-shadow: $shadow-card;
+  padding: $sp-6;
+
+  &__title {
+    font-size: $text-md;
+    font-weight: $fw-semi;
+    color: $text-primary;
+    margin-bottom: $sp-5;
+  }
+
+  // ── Preempt warning ───────────────────────────────────────────────────────
+  &__warning {
+    background: rgba(251, 191, 36, 0.07);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: $r-lg;
+    padding: $sp-4;
+    margin-bottom: $sp-4;
+
+    p {
+      font-size: $text-sm;
+      color: $text-secondary;
+      line-height: 1.55;
+      margin-bottom: $sp-3;
+    }
+
+    strong { color: $text-primary; }
+  }
+
+  &__warning-actions {
+    display: flex;
+    gap: $sp-2;
+    flex-wrap: wrap;
+  }
+
+  // ── Field ─────────────────────────────────────────────────────────────────
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: $sp-1;
+    margin-bottom: $sp-4;
+  }
+
+  &__label {
+    font-size: $text-sm;
+    color: $text-secondary;
+    font-weight: $fw-medium;
+  }
+
+  &__required {
+    color: $rose;
+    margin-left: 2px;
+  }
+
+  &__input {
+    padding: $sp-3 $sp-4;
+    background: $bg-input;
+    border: 1px solid $border;
+    border-radius: $r-md;
+    font-size: $text-base;
+    color: $text-primary;
+    font-family: $font-sans;
+    transition: border-color $t-fast, box-shadow $t-fast;
+
+    &::placeholder { color: $text-muted; }
+
+    &:focus {
+      outline: none;
+      border-color: $border-active;
+      box-shadow: 0 0 0 3px $accent-dim;
+    }
+  }
+
+  &__submit {
+    width: 100%;
+    padding: $sp-3 $sp-6;
+    margin-top: $sp-2;
+  }
+}

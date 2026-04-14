@@ -1,0 +1,83 @@
+// Flexbox center
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Flexbox column
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Flexbox row with gap
+@mixin flex-row($gap: 1rem) {
+  display: flex;
+  flex-direction: row;
+  gap: $gap;
+}
+
+// Responsive breakpoint
+@mixin breakpoint($size) {
+  @if $size == 'sm' {
+    @media (min-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $size == 'md' {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $size == 'lg' {
+    @media (min-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else if $size == 'xl' {
+    @media (min-width: $breakpoint-xl) {
+      @content;
+    }
+  }
+}
+
+// Truncate text with ellipsis
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Visually hidden (accessible)
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Card style
+@mixin card {
+  background: $bg-surface;
+  border-radius: $r-lg;
+  box-shadow: $shadow-card;
+  border: 1px solid $border;
+}
+
+// Input style
+@mixin input {
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  font-size: $font-size-base;
+  font-family: $font-family;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  }
+}

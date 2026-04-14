@@ -1,0 +1,258 @@
+@import '../styles/variables';
+
+.category-select {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-2;
+  margin-bottom: $sp-4;
+  position: relative; // added for dropdown menu
+
+  &__label {
+    font-size: $text-sm;
+    color: $text-secondary;
+    font-weight: $fw-medium;
+  }
+
+  &__trigger {
+    padding: $sp-3 $sp-4;
+    background: $bg-input;
+    border: 1px solid $border;
+    border-radius: $r-md;
+    font-size: $text-base;
+    font-family: $font-sans;
+    color: $text-primary;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color $t-fast, box-shadow $t-fast;
+
+    &:hover {
+      border-color: $border-active;
+    }
+
+    &.active {
+      border-color: $border-active;
+      box-shadow: 0 0 0 3px $accent-dim;
+    }
+  }
+
+  &__trigger-content {
+    display: flex;
+    align-items: center;
+    gap: $sp-3;
+  }
+
+  &__arrow {
+    font-size: 10px;
+    color: $text-muted;
+  }
+
+  &__color-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+
+    &.editable {
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: transform $t-fast;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  &__color-palette {
+    position: absolute;
+    top: 100%;
+    left: -4px;
+    margin-top: 8px;
+    background: $bg-elevated;
+    border: 1px solid $border;
+    border-radius: $r-md;
+    padding: $sp-2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    box-shadow: $shadow-md;
+    z-index: 20;
+
+    &.palette-up {
+      top: auto;
+      bottom: 100%;
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+  }
+
+  &__color-option {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+
+    &:hover {
+      transform: scale(1.1);
+      border-color: rgba(255,255,255,0.4);
+    }
+  }
+
+  &__dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: $bg-input;
+    border: 1px solid $border;
+    border-radius: $r-md;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: $shadow-md;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    padding: $sp-3 $sp-4;
+    cursor: pointer;
+    transition: background $t-fast;
+    gap: $sp-3;
+
+    &:hover {
+      background: $bg-elevated;
+      .category-select__delete-btn {
+        opacity: 1;
+      }
+    }
+
+    &.selected {
+      background: rgba($accent, 0.1);
+    }
+  }
+
+  &__item-name {
+    flex: 1;
+    color: $text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__delete-btn {
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity $t-fast, color $t-fast;
+    padding: 0 4px;
+
+    &:hover {
+      color: #ff4d4d;
+    }
+  }
+
+  &__add-trigger {
+    display: flex;
+    align-items: center;
+    padding: $sp-3 $sp-4;
+    cursor: pointer;
+    color: $text-muted;
+    gap: $sp-3;
+    transition: background $t-fast, color $t-fast;
+    border-top: 1px solid $border;
+
+    &:hover {
+      background: $bg-elevated;
+      color: $text-primary;
+    }
+  }
+
+  &__add-icon {
+    font-size: 18px;
+    line-height: 1;
+    font-weight: bold;
+    width: 16px;
+    text-align: center;
+  }
+
+  &__add-row {
+    display: flex;
+    align-items: center;
+    padding: $sp-2 $sp-3;
+    gap: $sp-2;
+    border-top: 1px solid $border;
+    background: $bg-elevated;
+  }
+
+  &__add-input {
+    flex: 1;
+    padding: $sp-2;
+    background: transparent;
+    border: none;
+    color: $text-primary;
+    font-family: inherit;
+    font-size: inherit;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: $text-muted;
+    }
+  }
+
+  &__save-btn, &__cancel-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background $t-fast;
+  }
+
+  &__save-btn {
+    color: $accent;
+
+    &:disabled {
+      color: $text-muted;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+      background: rgba($accent, 0.2);
+    }
+  }
+
+  &__cancel-btn {
+    color: $text-muted;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-primary;
+    }
+  }
+}
