@@ -3,6 +3,7 @@ import { useTaskContext } from '../context/TaskContext';
 import { Button } from './Button';
 import { TimePicker } from './TimePicker';
 import { CategorySelect } from './CategorySelect';
+import { ProjectSelect } from './ProjectSelect';
 import { formatTimeClock, stringToHue } from '../utils/formatTime';
 import './ActiveTask.scss';
 
@@ -30,36 +31,40 @@ function RingTimer({ progress, isPaused, isOpenEnded }: { progress: number; isPa
 }
 
 export function ActiveTask() {
-  const { activeTask, pauseTask, resumeTask, stopTask, cancelTask, editTask, categories, addCategory } = useTaskContext();
+  const { activeTask, pauseTask, resumeTask, stopTask, cancelTask, editTask, categories, addCategory, projects, addProject } = useTaskContext();
   const [isEditing, setIsEditing] = useState(false);
   const [confirmStop, setConfirmStop] = useState(false);
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [editName, setEditName] = useState('');
   const [editTime, setEditTime] = useState(0);
   const [editCategoryId, setEditCategoryId] = useState('');
+  const [editProjectId, setEditProjectId] = useState('none');
 
   const handleStartEdit = useCallback(() => {
     if (!activeTask) return;
     setEditName(activeTask.name);
     setEditTime(activeTask.time);
     setEditCategoryId(categories.find(c => c.name === activeTask.category)?.id || categories[0]?.id || '');
+    setEditProjectId(projects.find(p => p.name === activeTask.project)?.id || 'none');
     setIsEditing(true);
     setConfirmStop(false);
     setConfirmCancel(false);
-  }, [activeTask, categories]);
+  }, [activeTask, categories, projects]);
 
   const handleSaveEdit = useCallback(() => {
     if (!activeTask) return;
     const category = categories.find(c => c.id === editCategoryId);
+    const project = projects.find(p => p.id === editProjectId);
     const newRemainingTime = editTime < activeTask.remainingTime ? editTime : activeTask.remainingTime;
     editTask(activeTask.id, {
       name: editName.trim() || activeTask.name,
       time: editTime,
       remainingTime: newRemainingTime,
       category: category?.name || activeTask.category,
+      project: project?.name || activeTask.project || 'None',
     });
     setIsEditing(false);
-  }, [activeTask, editName, editTime, editCategoryId, categories, editTask]);
+  }, [activeTask, editName, editTime, editCategoryId, editProjectId, categories, projects, editTask]);
 
   const handlePauseResume = useCallback(() => {
     if (activeTask?.status === 'paused') resumeTask();
@@ -113,7 +118,16 @@ export function ActiveTask() {
             />
           </div>
           <TimePicker value={editTime} onChange={setEditTime} />
-          <CategorySelect categories={categories} value={editCategoryId} onChange={setEditCategoryId} onAddCategory={addCategory} />
+          
+          <div className="active-task__dropdowns" style={{display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div>
+              <ProjectSelect projects={projects} value={editProjectId} onChange={setEditProjectId} onAddProject={addProject} />
+            </div>
+            <div>
+              <CategorySelect categories={categories} value={editCategoryId} onChange={setEditCategoryId} onAddCategory={addCategory} />
+            </div>
+          </div>
+          
           <div className="active-task__actions">
             <Button variant="primary" onClick={handleSaveEdit}>Save changes</Button>
             <Button variant="secondary" onClick={() => setIsEditing(false)}>Cancel</Button>
@@ -140,15 +154,33 @@ export function ActiveTask() {
           {/* Task info */}
           <div className="active-task__info">
             <h3 className="active-task__name">{activeTask.name}</h3>
-            <span
-              className="active-task__category-pill"
-              style={{
-                background: `hsl(${hue}, 60%, 92%)`,
-                color: `hsl(${hue}, 50%, 28%)`,
-              }}
-            >
-              {activeTask.category}
-            </span>
+            <div className="active-task__meta-pills" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <span
+                className="active-task__category-pill"
+                style={{
+                  background: `hsl(${hue}, 60%, 92%)`,
+                  color: `hsl(${hue}, 50%, 28%)`,
+                }}
+              >
+                {activeTask.category}
+              </span>
+              {activeTask.project && activeTask.project !== 'None' && (
+                <span className="active-task__project-pill" style={{ 
+                  background: 'rgba(255,255,255,0.1)', 
+                  color: '#ccc', 
+                  padding: '2px 8px', 
+                  borderRadius: '9999px',
+                  fontSize: '0.75rem',
+                  fontWeight: 500,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  {activeTask.project}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Confirm overlays */}

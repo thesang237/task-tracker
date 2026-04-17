@@ -1,6 +1,6 @@
 @use '../styles/variables' as *;
 
-.category-select {
+.project-select {
   display: flex;
   flex-direction: column;
   gap: $sp-2;
@@ -137,7 +137,7 @@
 
     &:hover {
       background: $bg-elevated;
-      .category-select__delete-btn {
+      .project-select__delete-btn {
         opacity: 1;
       }
     }
@@ -164,6 +164,11 @@
     opacity: 0;
     transition: opacity $t-fast, color $t-fast;
     padding: 0 4px;
+
+    /* hide delete for none */
+    &.hidden {
+      display: none;
+    }
 
     &:hover {
       color: #ff4d4d;

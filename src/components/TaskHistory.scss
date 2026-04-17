@@ -46,33 +46,103 @@
     color: $text-secondary;
   }
 
-  &__sort-bar {
+  &__controls {
     display: flex;
-    gap: $sp-1;
+    flex-direction: row;
+    gap: $sp-4;
+    align-items: center;
     flex-wrap: wrap;
   }
 
-  &__sort-btn {
+  &__control-group {
+    display: flex;
+    align-items: center;
+    gap: $sp-2;
+    position: relative;
+  }
+
+  &__control-label {
+    font-size: $text-xs;
+    font-weight: $fw-bold;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: 45px;
+  }
+
+  &__dropdown {
+    position: relative;
+  }
+
+  &__dropdown-trigger {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: $sp-1 $sp-3;
-    background: transparent;
+    justify-content: space-between;
+    gap: $sp-2;
+    padding: $sp-2 $sp-3;
+    min-width: 110px;
+    background: $bg-input;
     border: 1px solid $border;
-    border-radius: $r-full;
+    border-radius: $r-md;
     font-family: $font-sans;
-    font-size: $text-xs;
-    font-weight: $fw-medium;
-    color: $text-muted;
+    font-size: $text-sm;
+    color: $text-primary;
     cursor: pointer;
     transition: all $t-fast;
 
-    &:hover { color: $text-secondary; border-color: rgba(255,255,255,0.12); }
+    &:hover, &--active {
+      border-color: $border-active;
+    }
+    
+    &--active {
+      box-shadow: 0 0 0 2px $accent-dim;
+    }
+  }
+
+  &__dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    background: $bg-elevated;
+    border: 1px solid $border;
+    border-radius: $r-md;
+    box-shadow: $shadow-md;
+    padding: $sp-1;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    min-width: 140px;
+  }
+
+  &__dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $sp-2 $sp-3;
+    background: transparent;
+    border: none;
+    border-radius: $r-sm;
+    font-family: $font-sans;
+    font-size: $text-sm;
+    color: $text-muted;
+    cursor: pointer;
+    text-align: left;
+    transition: all $t-fast;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.03);
+      color: $text-secondary;
+    }
 
     &--active {
-      background: $bg-elevated;
+      background: rgba($accent, 0.15);
       color: $text-primary;
-      border-color: rgba(255,255,255,0.12);
+      font-weight: $fw-medium;
+
+      &:hover {
+        background: rgba($accent, 0.2);
+      }
     }
   }
 
@@ -117,13 +187,75 @@
     color: $text-muted;
   }
 
-  // ── List ─────────────────────────────────────────────────────────────────
+  // ── List & Groups ─────────────────────────────────────────────────────────
   &__list {
     display: flex;
     flex-direction: column;
   }
 
-  // ── Item card ─────────────────────────────────────────────────────────────
+  &__group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: $sp-2;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__group-header {
+    padding: $sp-3 $sp-5;
+    background: rgba($bg-elevated, 0.5);
+    border-top: 1px solid $border;
+    border-bottom: 1px solid $border;
+    font-size: $text-xs;
+    font-weight: $fw-bold;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: $sp-2;
+  }
+
+  &__group-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 6px;
+    background: $bg-overlay;
+    border-radius: $r-full;
+    font-size: 10px;
+    color: $text-muted;
+  }
+
+  &__group-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: $sp-3 $sp-5;
+    background: rgba($bg-surface, 0.5);
+    border-top: 1px dashed rgba($border, 0.5);
+    border-bottom: 1px solid $border;
+  }
+
+  &__group-footer-label {
+    font-size: $text-xs;
+    font-weight: $fw-bold;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: $sp-3;
+  }
+  
+  &__group-footer-duration {
+    font-size: $text-sm;
+    font-weight: $fw-bold;
+    color: $text-primary;
+    font-family: $font-mono;
+    text-align: right;
+  }
+
   &__item {
     display: flex;
     align-items: center;
@@ -179,13 +311,6 @@
     text-overflow: ellipsis;
   }
 
-  &__item-time {
-    font-size: $text-xs;
-    color: $text-muted;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
   &__item-meta {
     display: flex;
     align-items: center;
@@ -201,56 +326,21 @@
     font-weight: $fw-medium;
   }
 
+  &__item-duration-col {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 110px; // ensure strict alignment block
+    flex-shrink: 0;
+    margin-left: auto; // push it all the way to right
+  }
+
   &__item-duration {
     font-size: $text-xs;
     color: $text-muted;
     font-family: $font-mono;
+    text-align: right;
   }
 
   &__item-of { opacity: 0.5; }
-
-  // ── Item actions ─────────────────────────────────────────────────────────
-  &__item-actions {
-    display: flex;
-    align-items: center;
-    gap: $sp-1;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity $t-fast;
-    flex-shrink: 0;
-    margin-left: $sp-3;
-  }
-
-  &__action-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: $r-md;
-    border: none;
-    background: transparent;
-    color: $text-muted;
-    cursor: pointer;
-    transition: all $t-fast;
-
-    svg { width: 14px; height: 14px; }
-
-    &:hover { background: $bg-overlay; color: $text-secondary; }
-
-    &--delete:hover {
-      color: $rose;
-      background: $rose-dim;
-    }
-
-    &--confirm:hover {
-      color: $green;
-      background: $green-dim;
-    }
-
-    &--cancel:hover {
-      color: $text-secondary;
-      background: $bg-overlay;
-    }
-  }
 }

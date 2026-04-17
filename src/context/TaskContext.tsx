@@ -1,5 +1,5 @@
 import { createContext, useContext, useCallback, useEffect, useRef } from 'react';
-import type { Task, Category, TaskContextValue } from '../types';
+import type { Task, Category, Project, TaskContextValue } from '../types';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const defaultCategories: Category[] = [
@@ -8,12 +8,17 @@ const defaultCategories: Category[] = [
   { id: '3', name: 'Study', color: '#4dff4d' },
 ];
 
+const defaultProjects: Project[] = [
+  { id: 'none', name: 'None', color: '#888888' }
+];
+
 const TaskContext = createContext<TaskContextValue | undefined>(undefined);
 
 export function TaskProvider({ children }: { children: React.ReactNode }) {
   const [activeTask, setActiveTask] = useLocalStorage<Task | null>('taskTracker_activeTask', null);
   const [taskHistory, setTaskHistory] = useLocalStorage<Task[]>('taskTracker_history', []);
   const [categories, setCategories] = useLocalStorage<Category[]>('taskTracker_categories', defaultCategories);
+  const [projects, setProjects] = useLocalStorage<Project[]>('taskTracker_projects', defaultProjects);
 
   // Ref for reading activeTask synchronously in callbacks that can't use state
   const activeTaskRef = useRef(activeTask);
@@ -26,26 +31,35 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     }
 
     const isOpenEnded = activeTask.time === 0;
+    let lastTick = Date.now();
 
     const interval = window.setInterval(() => {
+      const now = Date.now();
+      const elapsedSeconds = Math.floor((now - lastTick) / 1000);
+
+      if (elapsedSeconds < 1) return;
+
+      // Advance lastTick by the exact number of logical seconds we're processing
+      lastTick += elapsedSeconds * 1000;
+
       setActiveTask(prev => {
         if (!prev || prev.status !== 'active') return prev;
 
         // Open-ended: just increment timeSpent, no countdown
         if (isOpenEnded) {
-          return { ...prev, timeSpent: prev.timeSpent + 1 };
+          return { ...prev, timeSpent: prev.timeSpent + elapsedSeconds };
         }
 
         // Timed: countdown
-        if (prev.remainingTime <= 1) {
+        if (prev.remainingTime <= elapsedSeconds) {
           // Complete — handled in a separate effect below to avoid setState-in-setState
           return { ...prev, remainingTime: 0, timeSpent: prev.time };
         }
 
         return {
           ...prev,
-          remainingTime: prev.remainingTime - 1,
-          timeSpent: prev.timeSpent + 1,
+          remainingTime: prev.remainingTime - elapsedSeconds,
+          timeSpent: prev.timeSpent + elapsedSeconds,
         };
       });
     }, 1000);
@@ -145,14 +159,38 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     setCategories(prev => prev.filter(c => c.id !== id));
   }, [setCategories]);
 
+  const addProject = useCallback((name: string, color?: string) => {
+    const newProject: Project = {
+      id: crypto.randomUUID(),
+      name,
+      color: color || '#888888',
+    };
+    setProjects(prev => [...prev, newProject]);
+  }, [setProjects]);
+
+  const updateProject = useCallback((id: string, updates: Partial<Project>) => {
+    setProjects(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+  }, [setProjects]);
+
+  const deleteProject = useCallback((id: string) => {
+    setProjects(prev => prev.filter(p => p.id !== id));
+  }, [setProjects]);
+
   const deleteHistoryTask = useCallback((id: string) => {
     setTaskHistory(prev => prev.filter(task => task.id !== id));
+  }, [setTaskHistory]);
+
+  const updateHistoryTask = useCallback((id: string, updates: Partial<Task>) => {
+    setTaskHistory(prev => prev.map(task => 
+      task.id === id ? { ...task, ...updates } : task
+    ));
   }, [setTaskHistory]);
 
   const value: TaskContextValue = {
     activeTask,
     taskHistory,
     categories,
+    projects,
     createTask,
     editTask,
     pauseTask,
@@ -162,6 +200,10 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     addCategory,
     updateCategory,
     deleteCategory,
+    addProject,
+    updateProject,
+    deleteProject,
+    updateHistoryTask,
     deleteHistoryTask,
   };
 

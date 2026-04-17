@@ -3,14 +3,16 @@ import type { FormEvent } from 'react';
 import { useTaskContext } from '../context/TaskContext';
 import { TimePicker } from './TimePicker';
 import { CategorySelect } from './CategorySelect';
+import { ProjectSelect } from './ProjectSelect';
 import { Button } from './Button';
 import './TaskForm.scss';
 
 export function TaskForm() {
-  const { categories, createTask, addCategory, activeTask } = useTaskContext();
+  const { categories, createTask, addCategory, activeTask, projects, addProject } = useTaskContext();
   const [name, setName] = useState('');
   const [time, setTime] = useState(0);
   const [categoryId, setCategoryId] = useState(categories[0]?.id || '');
+  const [projectId, setProjectId] = useState('none');
   const [confirmPreempt, setConfirmPreempt] = useState(false);
 
   useEffect(() => {
@@ -19,6 +21,12 @@ export function TaskForm() {
     }
   }, [categories, categoryId]);
 
+  useEffect(() => {
+    if (projects.length > 0 && !projectId) {
+      setProjectId('none');
+    }
+  }, [projects, projectId]);
+
   // Reset confirm state if active task changes
   useEffect(() => {
     setConfirmPreempt(false);
@@ -26,17 +34,21 @@ export function TaskForm() {
 
   const doCreate = useCallback(() => {
     const category = categories.find(c => c.id === categoryId);
+    const project = projects.find(p => p.id === projectId);
+    
     createTask({
       name: name.trim(),
       time,
       remainingTime: time,
       timeSpent: 0,
       category: category?.name || 'Uncategorized',
+      project: project?.name || 'None',
     });
     setName('');
     setTime(0);
+    setProjectId('none');
     setConfirmPreempt(false);
-  }, [name, time, categoryId, categories, createTask]);
+  }, [name, time, categoryId, categories, projectId, projects, createTask]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
@@ -82,12 +94,21 @@ export function TaskForm() {
 
       <TimePicker value={time} onChange={setTime} />
 
-      <CategorySelect
-        categories={categories}
-        value={categoryId}
-        onChange={setCategoryId}
-        onAddCategory={addCategory}
-      />
+      <div className="task-form__dropdowns">
+        <ProjectSelect
+          projects={projects}
+          value={projectId}
+          onChange={setProjectId}
+          onAddProject={addProject}
+        />
+
+        <CategorySelect
+          categories={categories}
+          value={categoryId}
+          onChange={setCategoryId}
+          onAddCategory={addCategory}
+        />
+      </div>
 
       {!confirmPreempt && (
         <Button type="submit" variant="primary" disabled={!name.trim()} className="task-form__submit">

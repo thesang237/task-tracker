@@ -1,31 +1,31 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { Category } from '../types';
+import type { Project } from '../types';
 import { useTaskContext } from '../context/TaskContext';
-import './CategorySelect.scss';
+import './ProjectSelect.scss';
 
-interface CategorySelectProps {
-  categories: Category[];
+interface ProjectSelectProps {
+  projects: Project[];
   value: string;
-  onChange: (categoryId: string) => void;
-  onAddCategory: (name: string, color?: string) => void;
+  onChange: (projectId: string) => void;
+  onAddProject: (name: string, color?: string) => void;
 }
 
 const PRESET_COLORS = [
   '#ff4d4d', '#ff9933', '#ffd633', '#4dff4d', '#33ccff', '#4d79ff', '#b366ff', '#ff66b3', '#888888'
 ];
 
-export function CategorySelect({ categories, value, onChange, onAddCategory }: CategorySelectProps) {
-  const { updateCategory, deleteCategory } = useTaskContext();
+export function ProjectSelect({ projects, value, onChange, onAddProject }: ProjectSelectProps) {
+  const { updateProject, deleteProject } = useTaskContext();
   const [isOpen, setIsOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState('');
-  const [newCategoryColor, setNewCategoryColor] = useState(PRESET_COLORS[0]);
+  const [newProjectName, setNewProjectName] = useState('');
+  const [newProjectColor, setNewProjectColor] = useState(PRESET_COLORS[0]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [editingColorId, setEditingColorId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  const selectedCategory = categories.find(c => c.id === value);
+  const selectedProject = projects.find(p => p.id === value);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -40,79 +40,79 @@ export function CategorySelect({ categories, value, onChange, onAddCategory }: C
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleAddCategory = useCallback(() => {
-    if (newCategoryName.trim()) {
-      onAddCategory(newCategoryName.trim(), newCategoryColor);
-      setNewCategoryName('');
+  const handleAddProject = useCallback(() => {
+    if (newProjectName.trim()) {
+      onAddProject(newProjectName.trim(), newProjectColor);
+      setNewProjectName('');
       setIsAdding(false);
-      setNewCategoryColor(PRESET_COLORS[0]);
+      setNewProjectColor(PRESET_COLORS[0]);
     }
-  }, [newCategoryName, newCategoryColor, onAddCategory]);
+  }, [newProjectName, newProjectColor, onAddProject]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleAddCategory();
+      handleAddProject();
     } else if (e.key === 'Escape') {
       setIsAdding(false);
-      setNewCategoryName('');
+      setNewProjectName('');
     }
-  }, [handleAddCategory]);
+  }, [handleAddProject]);
 
   return (
-    <div className="category-select" ref={dropdownRef}>
-      <label className="category-select__label">Category</label>
+    <div className="project-select" ref={dropdownRef}>
+      <label className="project-select__label">Project</label>
 
       <div 
-        className={`category-select__trigger ${isOpen ? 'active' : ''}`} 
+        className={`project-select__trigger ${isOpen ? 'active' : ''}`} 
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="category-select__trigger-content">
-          {selectedCategory ? (
+        <span className="project-select__trigger-content">
+          {selectedProject ? (
             <>
               <span 
-                className="category-select__color-dot" 
-                style={{ backgroundColor: selectedCategory.color || '#888888' }} 
+                className="project-select__color-dot" 
+                style={{ backgroundColor: selectedProject.color || '#888888' }} 
               />
-              {selectedCategory.name}
+              {selectedProject.name}
             </>
-          ) : 'Select a category'}
+          ) : 'Select a project'}
         </span>
-        <span className="category-select__arrow">▼</span>
+        <span className="project-select__arrow">▼</span>
       </div>
 
       {isOpen && (
-        <div className="category-select__dropdown-menu">
-          {categories.map((category) => (
+        <div className="project-select__dropdown-menu">
+          {projects.map((project) => (
             <div 
-              key={category.id} 
-              className={`category-select__item ${category.id === value ? 'selected' : ''}`}
+              key={project.id} 
+              className={`project-select__item ${project.id === value ? 'selected' : ''}`}
               onClick={() => {
-                onChange(category.id);
+                onChange(project.id);
                 setIsOpen(false);
               }}
             >
               <div 
-                className="category-select__color-wrapper"
+                className="project-select__color-wrapper"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setEditingColorId(category.id === editingColorId ? null : category.id);
+                  setEditingColorId(project.id === editingColorId ? null : project.id);
                 }}
               >
                 <span 
-                  className="category-select__color-dot editable" 
-                  style={{ backgroundColor: category.color || '#888888' }} 
+                  className={`project-select__color-dot ${project.id !== 'none' ? 'editable' : ''}`} 
+                  style={{ backgroundColor: project.color || '#888888' }} 
                 />
-                {editingColorId === category.id && (
-                  <div className="category-select__color-palette" onClick={e => e.stopPropagation()}>
+                {editingColorId === project.id && project.id !== 'none' && (
+                  <div className="project-select__color-palette" onClick={e => e.stopPropagation()}>
                     {PRESET_COLORS.map(color => (
                       <div
                         key={color}
-                        className="category-select__color-option"
+                        className="project-select__color-option"
                         style={{ backgroundColor: color }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          updateCategory(category.id, { color });
+                          updateProject(project.id, { color });
                           setEditingColorId(null);
                         }}
                       />
@@ -120,17 +120,17 @@ export function CategorySelect({ categories, value, onChange, onAddCategory }: C
                   </div>
                 )}
               </div>
-              <span className="category-select__item-name">{category.name}</span>
-              {confirmDeleteId === category.id ? (
-                <div className="category-select__confirm-actions" onClick={e => e.stopPropagation()}>
+              <span className="project-select__item-name">{project.name}</span>
+              {confirmDeleteId === project.id ? (
+                <div className="project-select__confirm-actions" onClick={e => e.stopPropagation()}>
                   <button
                     type="button"
-                    className="category-select__confirm-btn category-select__confirm-btn--yes"
+                    className="project-select__confirm-btn project-select__confirm-btn--yes"
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteCategory(category.id);
-                      if (value === category.id) {
-                        onChange('');
+                      deleteProject(project.id);
+                      if (value === project.id) {
+                        onChange('none');
                       }
                       setConfirmDeleteId(null);
                     }}
@@ -140,7 +140,7 @@ export function CategorySelect({ categories, value, onChange, onAddCategory }: C
                   </button>
                   <button
                     type="button"
-                    className="category-select__confirm-btn category-select__confirm-btn--no"
+                    className="project-select__confirm-btn project-select__confirm-btn--no"
                     onClick={(e) => {
                       e.stopPropagation();
                       setConfirmDeleteId(null);
@@ -153,12 +153,13 @@ export function CategorySelect({ categories, value, onChange, onAddCategory }: C
               ) : (
                 <button
                   type="button"
-                  className="category-select__delete-btn"
+                  className={`project-select__delete-btn ${project.id === 'none' ? 'hidden' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setConfirmDeleteId(category.id);
+                    setConfirmDeleteId(project.id);
                   }}
-                  title="Delete category"
+                  disabled={project.id === 'none'}
+                  title="Delete project"
                 >
                   ✕
                 </button>
@@ -167,23 +168,23 @@ export function CategorySelect({ categories, value, onChange, onAddCategory }: C
           ))}
 
           {isAdding ? (
-            <div className="category-select__add-row" onClick={e => e.stopPropagation()}>
-              <div className="category-select__color-wrapper">
+            <div className="project-select__add-row" onClick={e => e.stopPropagation()}>
+              <div className="project-select__color-wrapper">
                 <span 
-                  className="category-select__color-dot editable" 
-                  style={{ backgroundColor: newCategoryColor }} 
+                  className="project-select__color-dot editable" 
+                  style={{ backgroundColor: newProjectColor }} 
                   onClick={() => setEditingColorId('new')}
                 />
                 {editingColorId === 'new' && (
-                  <div className="category-select__color-palette palette-up" onClick={e => e.stopPropagation()}>
+                  <div className="project-select__color-palette palette-up" onClick={e => e.stopPropagation()}>
                     {PRESET_COLORS.map(color => (
                       <div
                         key={color}
-                        className="category-select__color-option"
+                        className="project-select__color-option"
                         style={{ backgroundColor: color }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setNewCategoryColor(color);
+                          setNewProjectColor(color);
                           setEditingColorId(null);
                         }}
                       />
@@ -193,27 +194,27 @@ export function CategorySelect({ categories, value, onChange, onAddCategory }: C
               </div>
               <input
                 type="text"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
+                value={newProjectName}
+                onChange={(e) => setNewProjectName(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Category name"
-                className="category-select__add-input"
+                placeholder="Project name"
+                className="project-select__add-input"
                 autoFocus
               />
               <button
                 type="button"
-                className="category-select__save-btn"
-                onClick={handleAddCategory}
-                disabled={!newCategoryName.trim()}
+                className="project-select__save-btn"
+                onClick={handleAddProject}
+                disabled={!newProjectName.trim()}
               >
                 ✓
               </button>
               <button
                 type="button"
-                className="category-select__cancel-btn"
+                className="project-select__cancel-btn"
                 onClick={() => {
                   setIsAdding(false);
-                  setNewCategoryName('');
+                  setNewProjectName('');
                 }}
               >
                 ✕
@@ -221,14 +222,14 @@ export function CategorySelect({ categories, value, onChange, onAddCategory }: C
             </div>
           ) : (
             <div 
-              className="category-select__add-trigger"
+              className="project-select__add-trigger"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsAdding(true);
               }}
             >
-              <span className="category-select__add-icon">+</span>
-              New Category
+              <span className="project-select__add-icon">+</span>
+              New Project
             </div>
           )}
         </div>

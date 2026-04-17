@@ -57,6 +57,13 @@
     margin-left: 2px;
   }
 
+  &__dropdowns {
+    display: flex;
+    flex-direction: column;
+    gap: $sp-4;
+    margin-bottom: $sp-4;
+  }
+
   &__input {
     padding: $sp-3 $sp-4;
     background: $bg-input;
