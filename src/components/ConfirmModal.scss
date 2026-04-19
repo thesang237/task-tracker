@@ -1,0 +1,137 @@
+@use '../styles/variables' as *;
+
+.confirm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Higher z-index to sit above the EditTaskModal (2000) */
+  z-index: 3000;
+  animation: modal-backdrop-in 0.2s ease-out;
+}
+
+.confirm-modal {
+  background: $bg-surface;
+  width: 90%;
+  max-width: 360px;
+  border-radius: $r-xl;
+  border: 1px solid $border;
+  box-shadow: $shadow-raised;
+  overflow: hidden;
+  animation: modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    padding: $sp-5 $sp-6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid $border;
+
+    h3 {
+      margin: 0;
+      font-size: $text-md;
+      font-weight: $fw-semi;
+      color: $text-primary;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  &__close {
+    background: transparent;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: $text-muted;
+    transition: all $t-fast;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      background: $bg-elevated;
+      color: $text-primary;
+      transform: scale(1.05);
+    }
+  }
+
+  &__content {
+    padding: $sp-6;
+    p {
+      margin: 0;
+      font-size: $text-sm;
+      color: $text-secondary;
+      line-height: 1.5;
+    }
+  }
+
+  &__footer {
+    padding: $sp-4 $sp-6;
+    background: $bg-elevated;
+    border-top: 1px solid $border;
+    display: flex;
+    justify-content: flex-end;
+    gap: $sp-3;
+  }
+}
+
+.confirm-btn {
+  padding: 10px 18px;
+  border-radius: $r-md;
+  font-size: $text-sm;
+  font-weight: $fw-semi;
+  cursor: pointer;
+  transition: all $t-fast;
+  border: none;
+
+  &--cancel {
+    background: transparent;
+    color: $text-secondary;
+    border: 1px solid transparent;
+    &:hover {
+      background: $bg-overlay;
+      color: $text-primary;
+    }
+  }
+
+  &--save {
+    background: $accent;
+    color: $text-on-accent;
+    box-shadow: $shadow-glow-accent;
+    &:hover {
+      background: $accent-hover;
+      transform: translateY(-1px);
+    }
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &--danger {
+    background: $rose;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
+    &:hover {
+      background: color-mix(in srgb, $rose 90%, black);
+      transform: translateY(-1px);
+    }
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}

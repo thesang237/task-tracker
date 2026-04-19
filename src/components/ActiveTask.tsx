@@ -165,17 +165,7 @@ export function ActiveTask() {
                 {activeTask.category}
               </span>
               {activeTask.project && activeTask.project !== 'None' && (
-                <span className="active-task__project-pill" style={{ 
-                  background: 'rgba(255,255,255,0.1)', 
-                  color: '#ccc', 
-                  padding: '2px 8px', 
-                  borderRadius: '9999px',
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}>
+                <span className="active-task__project-pill">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                   {activeTask.project}
                 </span>

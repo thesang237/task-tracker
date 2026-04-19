@@ -3,6 +3,7 @@ import { useTaskContext } from './context/TaskContext';
 import { ActiveTask } from './components/ActiveTask';
 import { TaskForm } from './components/TaskForm';
 import { TaskHistory } from './components/TaskHistory';
+import { SettingsMenu } from './components/SettingsMenu';
 import './styles/main.scss';
 
 function AppHeader() {
@@ -35,6 +36,8 @@ function AppHeader() {
           <div className="app-header__stat-value">{totalMinutes}</div>
           <div className="app-header__stat-label">Minutes</div>
         </div>
+        <div className="app-header__divider" />
+        <SettingsMenu />
       </div>
     </header>
   );

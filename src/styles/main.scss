@@ -120,6 +120,13 @@
       margin-top: $sp-1;
     }
   }
+
+  &__divider {
+    width: 1px;
+    height: 24px;
+    background: $border;
+    align-self: center;
+  }
 }
 
 // ── Main grid ─────────────────────────────────────────────────────────────

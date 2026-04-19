@@ -49,4 +49,5 @@ export interface TaskContextValue {
   deleteProject: (id: string) => void;
   updateHistoryTask: (id: string, updates: Partial<Task>) => void;
   deleteHistoryTask: (id: string) => void;
+  importData: (data: { tasks: Task[]; categories: Category[]; projects: Project[] }) => void;
 }

@@ -326,6 +326,19 @@
     font-weight: $fw-medium;
   }
 
+  &__item-project {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px $sp-2;
+    background: $bg-overlay;
+    color: $text-secondary;
+    border: 1px solid $border;
+    border-radius: $r-full;
+    font-size: $text-xs;
+    font-weight: $fw-medium;
+  }
+
   &__item-duration-col {
     display: flex;
     justify-content: flex-end;

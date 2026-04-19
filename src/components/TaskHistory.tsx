@@ -93,16 +93,6 @@ export function TaskHistory() {
     }, {} as Record<string, Task[]>);
   }, [sortedHistory, groupField]);
 
-  const formatDateTime = (isoString?: string): string => {
-    if (!isoString) return '—';
-    const d = new Date(isoString);
-    const now = new Date();
-    const diff = now.getTime() - d.getTime();
-    if (diff < 60000) return 'Just now';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-  };
 
   return (
     <div className="task-history">
@@ -228,16 +218,7 @@ export function TaskHistory() {
                         </span>
 
                         {task.project && task.project !== 'None' && (
-                          <span className="task-history__item-project" style={{
-                            background: 'rgba(255,255,255,0.05)',
-                            color: '#999',
-                            padding: '1px 6px',
-                            borderRadius: '9999px',
-                            fontSize: '0.75rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                          }}>
+                          <span className="task-history__item-project">
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                             {task.project}
                           </span>

@@ -162,6 +162,19 @@
     font-weight: $fw-medium;
   }
 
+  &__project-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px $sp-3;
+    background: $bg-overlay;
+    color: $text-secondary;
+    border: 1px solid $border;
+    border-radius: $r-full;
+    font-size: $text-xs;
+    font-weight: $fw-medium;
+  }
+
   // ── Controls ─────────────────────────────────────────────────────────────
   &__controls {
     display: flex;

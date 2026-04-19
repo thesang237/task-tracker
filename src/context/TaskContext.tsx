@@ -186,6 +186,16 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     ));
   }, [setTaskHistory]);
 
+  const importData = useCallback((data: { tasks: Task[]; categories: Category[]; projects: Project[] }) => {
+    // Neutralize any active task
+    setActiveTask(null);
+    
+    // Set new data
+    setTaskHistory(data.tasks);
+    setCategories(data.categories);
+    setProjects(data.projects);
+  }, [setActiveTask, setTaskHistory, setCategories, setProjects]);
+
   const value: TaskContextValue = {
     activeTask,
     taskHistory,
@@ -205,6 +215,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     deleteProject,
     updateHistoryTask,
     deleteHistoryTask,
+    importData,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

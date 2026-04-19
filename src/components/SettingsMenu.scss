@@ -1,0 +1,88 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.settings-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &__trigger {
+    background: $bg-overlay;
+    border: 1px solid $border;
+    color: $text-secondary;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover, &--active {
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-primary;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 160px;
+    background: $bg-elevated;
+    border: 1px solid $border;
+    border-radius: $r-md;
+    padding: $sp-1;
+    z-index: 100;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    animation: dropdownSlideIn 0.2s ease;
+  }
+
+  &__item {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: $sp-2 $sp-3;
+    text-align: left;
+    color: $text-muted;
+    font-size: $text-sm;
+    font-family: $font-sans;
+    cursor: pointer;
+    border-radius: $r-sm;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.15s ease;
+
+    svg {
+      opacity: 0.7;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.03);
+      color: $text-secondary;
+
+      svg {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

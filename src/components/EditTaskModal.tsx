@@ -3,6 +3,7 @@ import type { Task } from '../types';
 import { useTaskContext } from '../context/TaskContext';
 import { CategorySelect } from './CategorySelect';
 import { ProjectSelect } from './ProjectSelect';
+import { ConfirmModal } from './ConfirmModal';
 import './EditTaskModal.scss';
 
 interface EditTaskModalProps {
@@ -15,6 +16,7 @@ interface EditTaskModalProps {
 export function EditTaskModal({ task, onClose, onSave, onDelete }: EditTaskModalProps) {
   const { categories, projects, addCategory, addProject } = useTaskContext();
   
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [name, setName] = useState(task.name);
   const [hours, setHours] = useState(Math.floor(task.timeSpent / 3600));
   const [minutes, setMinutes] = useState(Math.floor((task.timeSpent % 3600) / 60));
@@ -141,11 +143,7 @@ export function EditTaskModal({ task, onClose, onSave, onDelete }: EditTaskModal
             <div className="edit-modal__footer-left">
               <button 
                 className="edit-btn edit-btn--danger" 
-                onClick={() => {
-                  if (window.confirm('Are you sure you want to permanently delete this task?')) {
-                    onDelete();
-                  }
-                }}
+                onClick={() => setShowConfirmDelete(true)}
                 title="Delete task"
               >
                 Delete
@@ -158,6 +156,20 @@ export function EditTaskModal({ task, onClose, onSave, onDelete }: EditTaskModal
           </div>
         </div>
       </div>
+
+      {showConfirmDelete && onDelete && (
+        <ConfirmModal
+          title="Delete Task"
+          message="Are you sure you want to permanently delete this task?"
+          confirmText="Delete"
+          onConfirm={() => {
+            setShowConfirmDelete(false);
+            onDelete();
+          }}
+          onCancel={() => setShowConfirmDelete(false)}
+          isDanger={true}
+        />
+      )}
     </div>
   );
 }
