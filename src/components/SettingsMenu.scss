@@ -74,6 +74,37 @@
       }
     }
   }
+
+  &__user-info {
+    display: flex;
+    align-items: center;
+    gap: $sp-3;
+    padding: $sp-2 $sp-3;
+    margin-bottom: $sp-1;
+  }
+
+  &__avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__email {
+    font-size: $text-xs;
+    color: $text-secondary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+    font-family: $font-sans;
+  }
+
+  &__divider {
+    height: 1px;
+    background: $border;
+    margin: $sp-1 0;
+  }
 }
 
 @keyframes dropdownSlideIn {

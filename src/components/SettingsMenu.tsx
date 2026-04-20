@@ -1,11 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTaskContext } from '../context/TaskContext';
+import { useAuth } from '../context/AuthContext';
 import { ConfirmModal } from './ConfirmModal';
 import './SettingsMenu.scss';
 
 export function SettingsMenu() {
   const { taskHistory, categories, projects, importData } = useTaskContext();
+  const { user, signIn, logOut } = useAuth();
+  
   const [isOpen, setIsOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [pendingImportData, setPendingImportData] = useState<{tasks: any[], categories: any[], projects: any[]} | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -59,8 +63,12 @@ export function SettingsMenu() {
       }
     };
     reader.readAsText(file);
-    // Reset file input so same file can be imported again if needed
     e.target.value = '';
+  };
+
+  const handleLogoutConfirm = () => {
+    logOut();
+    setShowLogoutConfirm(false);
   };
 
   return (
@@ -78,6 +86,31 @@ export function SettingsMenu() {
 
       {isOpen && (
         <div className="settings-menu__dropdown">
+          {user ? (
+            <>
+              <div className="settings-menu__user-info">
+                {user.photoURL && <img src={user.photoURL} alt="User avatar" className="settings-menu__avatar" />}
+                <span className="settings-menu__email" title={user.email || ''}>{user.email}</span>
+              </div>
+              <div className="settings-menu__divider" />
+              <button className="settings-menu__item" onClick={() => { setShowLogoutConfirm(true); setIsOpen(false); }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                </svg>
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <button className="settings-menu__item" onClick={() => { signIn(); setIsOpen(false); }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+              </svg>
+              Sign In w/ Google
+            </button>
+          )}
+          
+          <div className="settings-menu__divider" />
+          
           <button className="settings-menu__item" onClick={handleExport}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
@@ -111,6 +144,17 @@ export function SettingsMenu() {
             setPendingImportData(null);
           }}
           onCancel={() => setPendingImportData(null)}
+          isDanger={true}
+        />
+      )}
+
+      {showLogoutConfirm && (
+        <ConfirmModal
+          title="Sign Out"
+          message="Are you sure you want to sign out?"
+          confirmText="Sign Out"
+          onConfirm={handleLogoutConfirm}
+          onCancel={() => setShowLogoutConfirm(false)}
           isDanger={true}
         />
       )}

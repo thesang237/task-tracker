@@ -8,6 +8,7 @@ import './styles/main.scss';
 
 function AppHeader() {
   const { taskHistory } = useTaskContext();
+
   const totalTasks = taskHistory.length;
   const totalMinutes = Math.round(
     taskHistory.reduce((sum, t) => sum + (t.timeSpent ?? t.time), 0) / 60
@@ -36,6 +37,7 @@ function AppHeader() {
           <div className="app-header__stat-value">{totalMinutes}</div>
           <div className="app-header__stat-label">Minutes</div>
         </div>
+        
         <div className="app-header__divider" />
         <SettingsMenu />
       </div>

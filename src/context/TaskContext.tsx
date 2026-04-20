@@ -1,6 +1,9 @@
 import { createContext, useContext, useCallback, useEffect, useRef } from 'react';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import type { Task, Category, Project, TaskContextValue } from '../types';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useAuth } from './AuthContext';
+import { db } from '../lib/firebase';
 
 const defaultCategories: Category[] = [
   { id: '1', name: 'Work', color: '#ff4d4d' },
@@ -15,14 +18,75 @@ const defaultProjects: Project[] = [
 const TaskContext = createContext<TaskContextValue | undefined>(undefined);
 
 export function TaskProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
   const [activeTask, setActiveTask] = useLocalStorage<Task | null>('taskTracker_activeTask', null);
   const [taskHistory, setTaskHistory] = useLocalStorage<Task[]>('taskTracker_history', []);
   const [categories, setCategories] = useLocalStorage<Category[]>('taskTracker_categories', defaultCategories);
   const [projects, setProjects] = useLocalStorage<Project[]>('taskTracker_projects', defaultProjects);
 
-  // Ref for reading activeTask synchronously in callbacks that can't use state
   const activeTaskRef = useRef(activeTask);
   activeTaskRef.current = activeTask;
+
+  const localStateRef = useRef({ activeTask, taskHistory, categories, projects });
+  localStateRef.current = { activeTask, taskHistory, categories, projects };
+
+  const isSyncingRef = useRef(false);
+
+  // Sync from Firebase
+  useEffect(() => {
+    if (!user) return;
+
+    const userDocRef = doc(db, 'users', user.uid);
+
+    const checkAndMigrate = async () => {
+      try {
+        const snap = await getDoc(userDocRef);
+        if (!snap.exists()) {
+          // First time config - write local data
+          await setDoc(userDocRef, localStateRef.current);
+        }
+      } catch (err) {
+        console.error("Migration error:", err);
+      }
+    };
+    checkAndMigrate();
+
+    const unsubscribe = onSnapshot(userDocRef, (snap) => {
+      // Don't apply changes that originated locally and haven't synced to server
+      if (snap.exists() && !snap.metadata.hasPendingWrites) {
+        const data = snap.data();
+        isSyncingRef.current = true;
+        
+        if (data.activeTask !== undefined) setActiveTask(data.activeTask);
+        if (data.taskHistory) setTaskHistory(data.taskHistory);
+        if (data.categories) setCategories(data.categories);
+        if (data.projects) setProjects(data.projects);
+        
+        // Reset syncing flag shortly after setting state
+        setTimeout(() => { isSyncingRef.current = false; }, 200);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [user, setActiveTask, setTaskHistory, setCategories, setProjects]);
+
+  // Sync to Firebase (debounced)
+  useEffect(() => {
+    if (!user || isSyncingRef.current) return;
+
+    const timeoutId = setTimeout(() => {
+      const userDocRef = doc(db, 'users', user.uid);
+      setDoc(userDocRef, {
+        activeTask,
+        taskHistory,
+        categories,
+        projects
+      }, { merge: true }).catch(err => console.error("Error syncing to FIrebase", err));
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [user, activeTask, taskHistory, categories, projects]);
+
 
   // Timer: one stable interval per active task. Runs for both timed and open-ended tasks.
   useEffect(() => {
