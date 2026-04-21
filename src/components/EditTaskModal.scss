@@ -105,6 +105,26 @@
     }
   }
 
+  &__textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: $r-md;
+    border: 1px solid $border;
+    font-size: $text-base;
+    color: $text-primary;
+    background: $bg-input;
+    font-family: $font-sans;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    transition: all $t-fast;
+
+    &:focus {
+      border-color: $accent;
+      box-shadow: 0 0 0 3px $accent-dim;
+    }
+  }
+
   &__time-inputs {
     display: flex;
     align-items: center;

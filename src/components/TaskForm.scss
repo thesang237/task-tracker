@@ -83,6 +83,20 @@
     }
   }
 
+  &__textarea {
+    @extend .task-form__input;
+    resize: vertical;
+    min-height: 60px;
+    font-family: inherit;
+  }
+
+  &__optional {
+    font-size: $text-xs;
+    color: $text-muted;
+    font-weight: normal;
+    margin-left: 2px;
+  }
+
   &__submit {
     width: 100%;
     padding: $sp-3 $sp-6;

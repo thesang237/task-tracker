@@ -18,6 +18,7 @@ export function EditTaskModal({ task, onClose, onSave, onDelete }: EditTaskModal
   
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [name, setName] = useState(task.name);
+  const [note, setNote] = useState(task.note || '');
   const [hours, setHours] = useState(Math.floor(task.timeSpent / 3600));
   const [minutes, setMinutes] = useState(Math.floor((task.timeSpent % 3600) / 60));
   const [seconds, setSeconds] = useState(task.timeSpent % 60);
@@ -36,12 +37,13 @@ export function EditTaskModal({ task, onClose, onSave, onDelete }: EditTaskModal
 
     onSave(task.id, {
       name,
+      note: note.trim() || undefined,
       timeSpent: totalSeconds,
       category: category?.name || task.category,
       project: project?.name || 'None',
     });
     onClose();
-  }, [task.id, task.category, name, hours, minutes, seconds, categoryId, projectId, categories, projects, onSave, onClose]);
+  }, [task.id, task.category, name, note, hours, minutes, seconds, categoryId, projectId, categories, projects, onSave, onClose]);
 
   // Handle escape key
   useEffect(() => {
@@ -116,6 +118,18 @@ export function EditTaskModal({ task, onClose, onSave, onDelete }: EditTaskModal
                 <span>s</span>
               </div>
             </div>
+          </div>
+          
+          <div className="edit-modal__field">
+            <label htmlFor="edit-note">Note</label>
+            <textarea
+              id="edit-note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Any extra details?"
+              className="edit-modal__textarea"
+              rows={3}
+            />
           </div>
           
           <div className="edit-modal__dropdowns" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

@@ -339,6 +339,18 @@
     font-weight: $fw-medium;
   }
 
+  &__item-note {
+    font-size: $text-sm;
+    color: $text-muted;
+    background: rgba($bg-input, 0.3);
+    padding: $sp-2 $sp-3;
+    border-radius: $r-md;
+    border-left: 2px solid $border;
+    margin-top: $sp-1;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
   &__item-duration-col {
     display: flex;
     justify-content: flex-end;

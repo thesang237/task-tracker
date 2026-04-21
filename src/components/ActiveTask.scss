@@ -154,6 +154,73 @@
     line-height: 1.3;
   }
 
+  &__name-inline {
+    width: 100%;
+    text-align: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: $r-sm;
+    font-size: $text-md;
+    font-weight: $fw-semi;
+    color: $text-primary;
+    line-height: 1.3;
+    padding: 2px $sp-2;
+    transition: all $t-fast;
+
+    &:hover, &:focus {
+      background: $bg-input;
+      border-color: $border;
+      outline: none;
+    }
+  }
+
+  &__meta-inline {
+    display: flex;
+    gap: $sp-2;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: $sp-1;
+
+    /* Shrink the size of these selects when used inline */
+    .project-select__trigger,
+    .category-select__trigger {
+      padding: 4px $sp-3;
+      border-radius: $r-full;
+      font-size: $text-xs;
+      min-height: auto;
+    }
+  }
+
+  &__note-inline {
+    width: 100%;
+    margin-top: $sp-2;
+    padding: $sp-2 $sp-3;
+    background: transparent;
+    border: 1px dashed transparent;
+    border-radius: $r-md;
+    font-size: $text-sm;
+    color: $text-secondary;
+    resize: none;
+    font-family: inherit;
+    transition: all $t-fast;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:hover {
+      border-color: $border;
+    }
+
+    &:focus {
+      background: $bg-input;
+      border-color: $border-active;
+      border-style: solid;
+      outline: none;
+      resize: vertical;
+    }
+  }
+
   &__category-pill {
     display: inline-block;
     padding: 2px $sp-3;
@@ -338,6 +405,12 @@
       outline: none;
       border-color: $border-active;
       box-shadow: 0 0 0 3px $accent-dim;
+    }
+
+    &--textarea {
+      resize: vertical;
+      min-height: 60px;
+      font-family: inherit;
     }
   }
 }

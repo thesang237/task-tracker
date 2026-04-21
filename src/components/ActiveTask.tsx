@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useTaskContext } from '../context/TaskContext';
 import { Button } from './Button';
 import { TimePicker } from './TimePicker';
@@ -39,6 +39,16 @@ export function ActiveTask() {
   const [editTime, setEditTime] = useState(0);
   const [editCategoryId, setEditCategoryId] = useState('');
   const [editProjectId, setEditProjectId] = useState('none');
+  const [editNote, setEditNote] = useState('');
+
+  // Inline editing local state
+  const [inlineName, setInlineName] = useState(activeTask?.name || '');
+  const [inlineNote, setInlineNote] = useState(activeTask?.note || '');
+
+  useEffect(() => {
+    setInlineName(activeTask?.name || '');
+    setInlineNote(activeTask?.note || '');
+  }, [activeTask?.name, activeTask?.note, activeTask?.id]);
 
   const handleStartEdit = useCallback(() => {
     if (!activeTask) return;
@@ -46,6 +56,7 @@ export function ActiveTask() {
     setEditTime(activeTask.time);
     setEditCategoryId(categories.find(c => c.name === activeTask.category)?.id || categories[0]?.id || '');
     setEditProjectId(projects.find(p => p.name === activeTask.project)?.id || 'none');
+    setEditNote(activeTask.note || '');
     setIsEditing(true);
     setConfirmStop(false);
     setConfirmCancel(false);
@@ -60,11 +71,12 @@ export function ActiveTask() {
       name: editName.trim() || activeTask.name,
       time: editTime,
       remainingTime: newRemainingTime,
+      note: editNote.trim() || undefined,
       category: category?.name || activeTask.category,
       project: project?.name || activeTask.project || 'None',
     });
     setIsEditing(false);
-  }, [activeTask, editName, editTime, editCategoryId, editProjectId, categories, projects, editTask]);
+  }, [activeTask, editName, editTime, editNote, editCategoryId, editProjectId, categories, projects, editTask]);
 
   const handlePauseResume = useCallback(() => {
     if (activeTask?.status === 'paused') resumeTask();
@@ -128,6 +140,17 @@ export function ActiveTask() {
             </div>
           </div>
           
+          <div className="active-task__field">
+            <label>Note</label>
+            <textarea
+              value={editNote}
+              onChange={(e) => setEditNote(e.target.value)}
+              className="active-task__input active-task__input--textarea"
+              placeholder="Any extra details?"
+              rows={2}
+            />
+          </div>
+          
           <div className="active-task__actions">
             <Button variant="primary" onClick={handleSaveEdit}>Save changes</Button>
             <Button variant="secondary" onClick={() => setIsEditing(false)}>Cancel</Button>
@@ -153,24 +176,38 @@ export function ActiveTask() {
 
           {/* Task info */}
           <div className="active-task__info">
-            <h3 className="active-task__name">{activeTask.name}</h3>
-            <div className="active-task__meta-pills" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              <span
-                className="active-task__category-pill"
-                style={{
-                  background: `hsl(${hue}, 60%, 92%)`,
-                  color: `hsl(${hue}, 50%, 28%)`,
-                }}
-              >
-                {activeTask.category}
-              </span>
-              {activeTask.project && activeTask.project !== 'None' && (
-                <span className="active-task__project-pill">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                  {activeTask.project}
-                </span>
-              )}
+            <input
+              className="active-task__name-inline"
+              value={inlineName}
+              onChange={(e) => setInlineName(e.target.value)}
+              onBlur={() => editTask(activeTask.id, { name: inlineName.trim() || activeTask.name })}
+              onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+              aria-label="Task name"
+            />
+            
+            <div className="active-task__meta-inline">
+              <CategorySelect 
+                categories={categories} 
+                value={categories.find(c => c.name === activeTask.category)?.id || ''} 
+                onChange={(id) => { const c = categories.find(x => x.id === id); if(c) editTask(activeTask.id, {category: c.name}); }} 
+                onAddCategory={addCategory} 
+              />
+              <ProjectSelect 
+                projects={projects} 
+                value={projects.find(p => p.name === activeTask.project)?.id || 'none'} 
+                onChange={(id) => { const p = projects.find(x => x.id === id); if(p) editTask(activeTask.id, {project: p.name}); }} 
+                onAddProject={addProject} 
+              />
             </div>
+
+            <textarea
+              className="active-task__note-inline"
+              value={inlineNote}
+              onChange={(e) => setInlineNote(e.target.value)}
+              onBlur={() => editTask(activeTask.id, { note: inlineNote.trim() || undefined })}
+              placeholder="Add a note (optional)..."
+              rows={2}
+            />
           </div>
 
           {/* Confirm overlays */}

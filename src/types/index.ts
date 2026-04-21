@@ -1,6 +1,7 @@
 export interface Task {
   id: string;
   name: string;
+  note?: string;
   time: number;        // Total duration in seconds (0 = open-ended)
   remainingTime: number;
   timeSpent: number;   // Actual elapsed seconds
@@ -25,6 +26,7 @@ export interface Project {
 
 export interface TaskFormData {
   name: string;
+  note?: string;
   time: number;
   category: string;
   project?: string;

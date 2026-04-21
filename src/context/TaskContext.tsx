@@ -87,6 +87,18 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     return () => clearTimeout(timeoutId);
   }, [user, activeTask, taskHistory, categories, projects]);
 
+  // Migrate old tasks to explicitly have an empty note field
+  useEffect(() => {
+    if (activeTask && !('note' in activeTask)) {
+      setActiveTask(prev => prev ? { ...prev, note: prev.note ?? '' } : prev);
+    }
+
+    const needsHistoryMigration = taskHistory.some(task => !('note' in task));
+    if (needsHistoryMigration) {
+      setTaskHistory(prev => prev.map(task => ({ ...task, note: task.note ?? '' })));
+    }
+  }, [taskHistory, activeTask, setTaskHistory, setActiveTask]);
+
 
   // Timer: one stable interval per active task. Runs for both timed and open-ended tasks.
   useEffect(() => {

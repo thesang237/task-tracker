@@ -10,6 +10,7 @@ import './TaskForm.scss';
 export function TaskForm() {
   const { categories, createTask, addCategory, activeTask, projects, addProject } = useTaskContext();
   const [name, setName] = useState('');
+  const [note, setNote] = useState('');
   const [time, setTime] = useState(0);
   const [categoryId, setCategoryId] = useState(categories[0]?.id || '');
   const [projectId, setProjectId] = useState('none');
@@ -38,6 +39,7 @@ export function TaskForm() {
     
     createTask({
       name: name.trim(),
+      note: note.trim() || undefined,
       time,
       remainingTime: time,
       timeSpent: 0,
@@ -45,10 +47,11 @@ export function TaskForm() {
       project: project?.name || 'None',
     });
     setName('');
+    setNote('');
     setTime(0);
     setProjectId('none');
     setConfirmPreempt(false);
-  }, [name, time, categoryId, categories, projectId, projects, createTask]);
+  }, [name, note, time, categoryId, categories, projectId, projects, createTask]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
@@ -89,6 +92,20 @@ export function TaskForm() {
           className="task-form__input"
           autoComplete="off"
           required
+        />
+      </div>
+
+      <div className="task-form__field">
+        <label htmlFor="task-note" className="task-form__label">
+          Note <span className="task-form__optional">(optional)</span>
+        </label>
+        <textarea
+          id="task-note"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Any extra details?"
+          className="task-form__textarea"
+          rows={2}
         />
       </div>
 

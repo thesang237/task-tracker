@@ -225,6 +225,12 @@ export function TaskHistory() {
                         )}
 
                       </div>
+
+                      {task.note && (
+                        <div className="task-history__item-note">
+                          {task.note.length > 80 ? task.note.substring(0, 80) + '...' : task.note}
+                        </div>
+                      )}
                     </div>
 
                     <div className="task-history__item-duration-col">
