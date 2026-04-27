@@ -5,7 +5,7 @@ import { ConfirmModal } from './ConfirmModal';
 import './SettingsMenu.scss';
 
 export function SettingsMenu() {
-  const { taskHistory, categories, projects, importData } = useTaskContext();
+  const { taskHistory, categories, projects, importData, soundEnabled, setSoundEnabled } = useTaskContext();
   const { user, signIn, logOut } = useAuth();
   
   const [isOpen, setIsOpen] = useState(false);
@@ -111,6 +111,19 @@ export function SettingsMenu() {
           
           <div className="settings-menu__divider" />
           
+          <button className="settings-menu__item" onClick={() => setSoundEnabled(!soundEnabled)}>
+            {soundEnabled ? (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M11 5L6 9H2V15H6L11 19V5Z" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M11 5L6 9H2V15H6L11 19V5Z" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" />
+              </svg>
+            )}
+            {soundEnabled ? 'Sound: On' : 'Sound: Off'}
+          </button>
+
           <button className="settings-menu__item" onClick={handleExport}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>

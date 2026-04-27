@@ -4,6 +4,8 @@ import type { Task, Category, Project, TaskContextValue } from '../types';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useAuth } from './AuthContext';
 import { db } from '../lib/firebase';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { useCompletionSound } from '../hooks/useCompletionSound';
 
 const defaultCategories: Category[] = [
   { id: '1', name: 'Work', color: '#ff4d4d' },
@@ -31,6 +33,8 @@ interface SyncConflictData {
 export interface TaskContextExtended extends TaskContextValue {
   syncConflict: SyncConflictData | null;
   resolveSyncConflict: (choice: 'merge' | 'replace_with_cloud' | 'keep_local') => void;
+  soundEnabled: boolean;
+  setSoundEnabled: (enabled: boolean) => void;
 }
 
 const TaskContext = createContext<TaskContextExtended | undefined>(undefined);
@@ -131,8 +135,13 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   const [taskHistory, setTaskHistory] = useLocalStorage<Task[]>('taskTracker_history', []);
   const [categories, setCategories] = useLocalStorage<Category[]>('taskTracker_categories', defaultCategories);
   const [projects, setProjects] = useLocalStorage<Project[]>('taskTracker_projects', defaultProjects);
+  const [soundEnabled, setSoundEnabled] = useLocalStorage<boolean>('taskTracker_soundEnabled', true);
 
   const [syncConflict, setSyncConflict] = useState<SyncConflictData | null>(null);
+
+  // Sync title and prepare completion sound
+  useDocumentTitle(activeTask);
+  const playCompletionSound = useCompletionSound(soundEnabled);
 
   const activeTaskRef = useRef(activeTask);
   activeTaskRef.current = activeTask;
@@ -419,10 +428,12 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
         status: 'completed',
         completedAt: new Date().toISOString(),
       };
+      
+      playCompletionSound();
       setTaskHistory(prev => [completedTask, ...prev]);
       setActiveTask(null);
     }
-  }, [activeTask, setTaskHistory, setActiveTask]);
+  }, [activeTask, setTaskHistory, setActiveTask, playCompletionSound]);
 
   const createTask = useCallback((taskData: Omit<Task, 'id' | 'status' | 'createdAt' | 'completedAt'>) => {
     const current = activeTaskRef.current;
@@ -560,6 +571,8 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     importData,
     syncConflict,
     resolveSyncConflict,
+    soundEnabled,
+    setSoundEnabled,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
