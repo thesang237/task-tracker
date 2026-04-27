@@ -4,6 +4,7 @@ import { ActiveTask } from './components/ActiveTask';
 import { TaskForm } from './components/TaskForm';
 import { TaskHistory } from './components/TaskHistory';
 import { SettingsMenu } from './components/SettingsMenu';
+import { SyncConflictModal } from './components/SyncConflictModal';
 import './styles/main.scss';
 
 function AppHeader() {
@@ -60,6 +61,7 @@ function AppContent() {
           </div>
         </div>
       </div>
+      <SyncConflictModal />
     </div>
   );
 }
